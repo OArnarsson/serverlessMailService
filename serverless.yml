@@ -1,0 +1,16 @@
+service: serverless-mail-service
+
+provider:
+  name: aws
+  profile: default
+  runtime: nodejs8.10
+  stage: prod
+  region: us-east-1
+  deploymentBucket:
+    serverSideEncryption: AES256
+
+functions:
+  notifier:
+    handler: handler.notifier
+plugins:
+  - serverless-offline
