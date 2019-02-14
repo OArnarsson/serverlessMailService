@@ -7,16 +7,9 @@ module.exports.notifier = (event, context, callback) => {
   let verifiedEvent;
 
   try {
-    verifiedEvent = jwt.verify(
-      JSON.parse(event.body).payload,
-      process.env.JWT_SECRET
-    );
+    verifiedEvent = jwt.verify(JSON.parse(event.body).payload, process.env.JWT_SECRET);
   } catch (e) {
-    return sendResponse({
-      statusCode: 401,
-      callback,
-      body: { e, derp: event, verifiedEvent }
-    });
+    return sendResponse({ statusCode: 401, callback, body: e });
   }
 
   sendEmail(verifiedEvent)
@@ -33,26 +26,19 @@ const sendResponse = ({ statusCode, body, callback }) => {
     statusCode,
     headers: {
       "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Credentials": true
+      "Access-Control-Allow-Credentials": true,
     },
     multiValueHeaders: {
-      "Access-Control-Allow-Headers": [
-        "Access-Control-Allow-Origin",
-        "Content-Type"
-      ]
+      "Access-Control-Allow-Headers": ["Access-Control-Allow-Origin", "Content-Type"],
     },
-    body: JSON.stringify(body)
+    body: JSON.stringify(body),
   };
   return callback(null, response);
 };
 
 const _smtpConnect = () => {
   return new Promise(resolve => {
-    const transporter = nodemailer.createTransport(
-      nodemailerSendgrid({
-        apiKey: process.env.API_KEY
-      })
-    );
+    const transporter = nodemailer.createTransport(nodemailerSendgrid({ apiKey: process.env.API_KEY }));
     resolve(transporter);
   });
 };
@@ -60,15 +46,10 @@ const _smtpConnect = () => {
 const sendEmail = payload => {
   return _smtpConnect().then(transporter => {
     return new Promise((resolve, reject) => {
-      const mailOptions = {
-        ...payload,
-        text: payload.body,
-        html: payload.body
-      };
+      const mailOptions = { ...payload, text: payload.body, html: payload.body };
 
       transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
-          console.log(error);
           reject(error);
         }
         resolve(info);
