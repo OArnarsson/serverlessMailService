@@ -2,7 +2,7 @@
 
 A serverless cloud function to send emails by lambda invoke for dead simple client side forms.
 
-### Example Client Implementation
+### Example Client Implementation using Axios
 
 ```javascript
 import jwt from "jsonwebtoken";
@@ -11,7 +11,16 @@ import axios from "axios";
 const formToken = formValues =>
   jwt.sign(formValues, `${YourLambdaJWTSecret}`).toString();
 
-axios.post(`${YourLambdaURL}`, formToken);
+axios.post(`${YourLambdaURL}`, { payload: formToken });
+```
+
+### Example Client Implementation using Fetch
+
+```javascript
+fetch(`${YourLambdaURL}`, {
+  method: "POST",
+  body: JSON.stringify({ payload: formValues })
+});
 ```
 
 ### Example Form Values
