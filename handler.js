@@ -7,9 +7,16 @@ module.exports.notifier = (event, context, callback) => {
   let verifiedEvent;
 
   try {
-    verifiedEvent = jwt.verify(event.payload, process.env.JWT_SECRET);
+    verifiedEvent = jwt.verify(
+      JSON.parse(event.body).payload,
+      process.env.JWT_SECRET
+    );
   } catch (e) {
-    return sendResponse({ statusCode: 401, callback });
+    return sendResponse({
+      statusCode: 401,
+      callback,
+      body: { e, derp: event, verifiedEvent }
+    });
   }
 
   sendEmail(verifiedEvent)
@@ -24,8 +31,17 @@ module.exports.notifier = (event, context, callback) => {
 const sendResponse = ({ statusCode, body, callback }) => {
   const response = {
     statusCode,
-    headers: { "Access-Control-Allow-Origin": "*" },
-    body
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Credentials": true
+    },
+    multiValueHeaders: {
+      "Access-Control-Allow-Headers": [
+        "Access-Control-Allow-Origin",
+        "Content-Type"
+      ]
+    },
+    body: JSON.stringify(body)
   };
   return callback(null, response);
 };
@@ -60,12 +76,3 @@ const sendEmail = payload => {
     });
   });
 };
-
-// THIS IS THE CLIENT SIGNATURE FUNCTION
-const token = item =>
-  jwt
-    .sign(
-      item,
-      "3F19cAcB85f8E06CD0ab4c9d17E782EdE7D77C022A4dF5b0688d526Dd6C9eF87"
-    )
-    .toString();
