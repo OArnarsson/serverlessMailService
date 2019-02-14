@@ -8,8 +8,7 @@ A serverless cloud function to send emails by lambda invoke for dead simple clie
 import jwt from "jsonwebtoken";
 import axios from "axios";
 
-const formToken = formValues =>
-  jwt.sign(formValues, `${YourLambdaJWTSecret}`).toString();
+const formToken = formValues => jwt.sign(formValues, `${YourLambdaJWTSecret}`).toString();
 
 axios.post(`${YourLambdaURL}`, { payload: formToken });
 ```
@@ -19,7 +18,7 @@ axios.post(`${YourLambdaURL}`, { payload: formToken });
 ```javascript
 fetch(`${YourLambdaURL}`, {
   method: "POST",
-  body: JSON.stringify({ payload: formValues })
+  body: JSON.stringify({ payload: formValues }),
 });
 ```
 
@@ -37,7 +36,7 @@ fetch(`${YourLambdaURL}`, {
 }
 ```
 
-### Example Payload
+### Example HTTP Payload
 
 ```json
 {
