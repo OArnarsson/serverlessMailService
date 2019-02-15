@@ -16,9 +16,13 @@ axios.post(`${YourLambdaURL}`, { payload: formToken });
 ### Example Client Implementation using Fetch
 
 ```javascript
+import jwt from "jsonwebtoken";
+
+const formToken = formValues => jwt.sign(formValues, `${YourLambdaJWTSecret}`).toString();
+
 fetch(`${YourLambdaURL}`, {
   method: "POST",
-  body: JSON.stringify({ payload: formValues }),
+  body: JSON.stringify({ payload: formToken }),
 });
 ```
 
