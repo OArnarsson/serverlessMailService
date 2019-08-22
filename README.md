@@ -1,4 +1,6 @@
-## ServerlessMailService
+## ServerlessMailService <img src="https://img.shields.io/badge/AWS-%CE%BB-yellow.svg" alt="AWS Lambda" />
+
+
 
 A serverless cloud function to send emails by lambda invoke for dead simple client side forms.
 
