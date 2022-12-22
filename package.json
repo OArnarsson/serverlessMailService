@@ -6,7 +6,7 @@
   "main": "handler.js",
   "dependencies": {
     "dotenv": "^6.2.0",
-    "jsonwebtoken": "^8.4.0",
+    "jsonwebtoken": "^9.0.0",
     "nodemailer": "^4.4.1",
     "nodemailer-sendgrid": "^1.0.3"
   },
